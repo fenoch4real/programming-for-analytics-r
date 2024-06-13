@@ -1,0 +1,186 @@
+---
+title: "Week 5 Assignment"
+author: "Oluwafemi Fabiyi"
+date: "11/05/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+### Loading relevant libraries
+
+```{r cars 1}
+# install.packages("readr")
+# install.packages("tidyverse") # include magrittr
+# install.packages("stringr")
+# install.packages("lattice")
+# install.packages("ggplot2")
+
+library(readr)
+library(tidyverse)
+library(stringr)
+library(lattice)
+library(ggplot2)
+```
+
+###### 1)	Create a function to calculate a*b+log(a); use it to get calc(3,4) and calc(5,6)
+
+```{r cars 1.1}
+
+calcLog <-function(a, b){
+  return (a*b+log(a))
+}
+```
+###### 2)	Create a function to check if the number is divisible by three or not
+
+```{r cars 1.2}
+
+divBy3 <- function(val){
+  result <- FALSE
+  if(val %% 3 == 0){
+    result == 3
+  }
+  return (result)
+}
+```
+###### 3) Create a list with the following 5 dataframes: 
+
+```{r cars 1.3}
+Data1<-data.frame("State"=c("CA","NY","IL"),"Value"=c(900,1000,1200))
+Data2<-data.frame("State"=c("MN","WI","IN"),"Value"=c(300,800,700))
+Data3<-data.frame("State"=c("AZ","AR","TX"),"Value"=c(200,500,1300)) 
+Data4<-data.frame("State"=c("MD","NJ","WA"),"Value"=c(400,1100,600))
+Data5<-data.frame("State"=c("MA","NC","AL"),"Value"=c(100,1600,300))
+
+myList <- list(Data1, Data2, Data3, Data4, Data5)
+myList
+```
+###### 4) Create a function using a for loop to stack the 5 Dataframes (add rows) in the list from questions 2:
+
+```{r cars 1.4}
+sizeOfOriginalList <- length(myList)
+sizeOfOriginalList
+for(i in 1:sizeOfOriginalList){
+newIndex <- i + sizeOfOriginalList
+myList[newIndex] <- myList[i]
+}
+myList
+```
+###### 5.1) GL Data Exploration (10 points)
+Display the data structure and overview of the rows and columns of the dataset
+Use the summary method to display descriptive statistics for every variable
+
+```{r cars 5.1}
+dataPath <- "~/Desktop/MSc Analytics/Autumn 2020/MSCA 37010 2 - Programming for Analytics/Week 5/Assignment/"
+dat <- read.csv(paste(dataPath,'GeneralLiabilityExposure.csv',sep = '/'), header=TRUE)
+head(structure(dat))
+summary(dat)
+```
+###### 5.2) Create a Scatterplot for the Exposure column (5 points)
+
+```{r cars 5.2}
+plot(dat$Exposure)
+```
+
+###### 5.3) Create a Histogram of the Premium column using your favorite color (5 points)
+
+```{r cars 5.3}
+hist(dat$Premium, 
+     main = 'Premium Values',xlab = 'Premium', 
+     col='blue')
+```
+
+###### 6.1 Use the ClaimSeverity column in the AutoCollision dataset to create a horizontal plot (5 points)
+```{r cars 6.1}
+dataPath <- "~/Desktop/MSc Analytics/Autumn 2020/MSCA 37010 2 - Programming for Analytics/Week 5/Assignment/"
+mydat <- read.csv(paste(dataPath,'AutoCollision.csv',sep = '/'), header=TRUE)
+head(structure(mydat))
+summary(mydat)
+
+
+barplot(mydat$ClaimSeverity, 
+        main = 'Claim Severity Graph',
+        xlab = 'calim severity levels', 
+        col= 'green',horiz = TRUE)
+```
+
+###### 6.2) Use the ClaimSeverity column in the AutoCollision dataset to create a vertical plot (5 points)
+
+```{r cars 6.2}
+barplot(mydat$ClaimSeverity, 
+        main = 'Claim Severity Graph',
+        xlab = 'calim severity levels', 
+        col= 'green',horiz = FALSE)
+```
+
+###### 6.3) Use the ClaimCount column in the AutoCollision dataset to create a Single box plot (5 points)
+
+```{r cars 6.3}
+#Single box plot
+boxplot(mydat$ClaimCount, main='Single Boxplot')
+```
+
+###### 6.4) Use the 15-17 columns in the GL dataset to create a Multiple box plot (10 points)
+
+```{r cars 6.4}
+# Multiple box plots
+boxplot(dat[,15:17], main='Multiple Boxplots')
+
+```
+
+###### 6.5) Put all the plots above in a single plot (5 points)
+
+```{r cars 6.5}
+par(mfrow=c(3,3), mar=c(2,5,2,1), las=1, bty="n")
+barplot(mydat$ClaimSeverity, 
+        main = 'Claim Severity Graph',
+        xlab = 'calim severity levels', 
+        col= 'green',horiz = TRUE)
+barplot(mydat$ClaimSeverity, 
+        main = 'Claim Severity Graph',
+        xlab = 'calim severity levels', 
+        col= 'green',horiz = FALSE)
+boxplot(mydat$ClaimCount, main='Single Boxplot')
+boxplot(dat[,15:17], main='Multiple Boxplots')
+```
+
+
+###### 7) Use the AutoCollision dataset to create a plot for each of ClaimSeverity and ClaimCount 
+columns arranged in a Scatterplot Matrix (Hint: use splom())
+```{r cars 7.1}
+splom(mydat[c(3,4)], main="severity / count")
+```
+
+###### 8) Use R built-in dataset mtcars to create a styling scatter plots with disp as x, hp as y, cyl as factor
+```{r cars 8.0}
+library(ggplot2)
+attach(mtcars)
+palette("default")
+cyl <- factor(cyl,levels=c(4,6,8),  
+              labels=c("4cyl","6cyl","8cyl"))
+ggplot(data = mtcars, mapping = aes(x = disp, y = hp, color = am)) + geom_point()
+
+```
+
+
+###### 9.1)	What is the function to remove object x?
+```{r cars 9.1}
+x <- c(1:3)
+x
+rm(x)
+
+```
+
+###### 9.2)	What is the garbage collection function used to releases memory, freeing it up to used once again?
+```{r cars 9.2}
+ gc()
+```
+
+###### 9.3)	What function is used to check how much memory is being used?
+```{r cars 9.3}
+ memory.profile()
+```
+
+
+

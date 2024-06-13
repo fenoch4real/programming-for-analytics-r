@@ -1,0 +1,292 @@
+---
+title: "Week 4 Assignment"
+author: "Oluwafemi Fabiyi"
+date: "10/29/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### 1
+
+```{r cars 1}
+library(readr)
+library(dplyr)
+library(MASS)
+
+head(painters, 3)
+```
+###### 1.1)	To select the observations of painters with Drawing greater than or equals 18
+```{r cars 1.1}
+
+head(filter(painters,Drawing >= 18))
+
+```
+###### 1.2)	To select those observations of School is B and D
+```{r cars 1.2}
+
+head(filter(painters, School == 'B' | School == 'D'))
+
+```
+###### 1.3)	To select those observations with the Composition (the first column) and Expression variables (the fifth column)
+```{r cars 1.3}
+
+head(dplyr::select(painters,Composition, Expression))
+
+```
+###### 1.4)  To create a data set that contains those observations of School is B and D with the Composition (the first column) and Expression variables (the fifth column)
+```{r cars 1.4}
+
+painters %>% dplyr::select(School, Composition, Expression) %>% filter(School == 'B' | School == 'D')
+
+```
+### 2 
+Use CommercialProperty.csv to do the following: (20 points)
+
+```{r cars 2}
+dataPath <- "~/Desktop/MSc Analytics/Autumn 2020/MSCA 37010 2 - Programming for Analytics/Week 4/Assignment/"
+dat <- read.csv(paste(dataPath,'CommercialProperty(2).csv',sep = '/'), header=TRUE)
+head(dat, 3)
+
+```
+###### 2.1) Subset/Create a EffectiveYear variable based on the EffectiveDate column
+```{r cars 2.1}
+EffectiveYear <- format.Date(as.Date(dat$EffectiveDate,format="%d-%b-%y"), "%Y")
+head(EffectiveYear)
+```
+
+###### 2.2) Subset/Create a EffectiveMonth variable based on the EffectiveDate column
+```{r cars 2.2}
+EffectiveMonth <- format.Date(as.Date(dat$EffectiveDate,format="%d-%b-%y"), "%B")
+head(EffectiveMonth)
+```
+
+###### 2.3) Subset/Create a dataset with EarnedPremium>=3000 and EffectiveYear>=17
+```{r cars 2.3}
+dataset2.3 <- dat %>% filter(EarnedPremium>=3000)
+head(dataset2.3)
+
+```
+
+###### 2.4) Subset/Create a dataset with IncurredLoss>100 
+```{r cars 2.4}
+dataset2.4 <- dat %>% filter(IncurredLoss>100)
+head(dataset2.4)
+```
+
+###### 2.5) Subset/Create a sub dataset with State is CA and Segment is habitational
+```{r cars 2.5}
+dataset2.5 <- dat %>% filter(State == 'CA')
+head(dataset2.5)
+```
+
+
+###### 2.6) Subset/Create a dataset when IncurredLoss>100 and State is CA and Segment is Habitational
+```{r cars 2.6}
+dataset2.6 <- dat %>% filter(IncurredLoss>100) %>% filter(State == 'CA')
+head(dataset2.6)
+
+```
+
+###### 2.7) Calculate average earned premium:
+```{r cars 2.7}
+mean(dat$EarnedPremium)
+```
+
+###### 2.8) Create a variable named as "LargePremium_Indicator" when the EarnedPremium is greater than average EarnedPremium from the above
+```{r cars 2.8}
+LargePremium_Indicator <- dat %>% filter(EarnedPremium > mean(dat$EarnedPremium))
+head(LargePremium_Indicator)
+```
+
+###### 2.9) Use for loop to create an indicator (aka: binary variable/new column) for each of CA, IL, FL, NY based on the State column # (10 Bonus Points)
+```{r cars 2.9}
+bin_value <- c()
+for(val in 1:length(dat$State)){
+  if(dat$State[val] == 'CA'){
+    bin_value[val] <- 1
+  }
+  else if (dat$State[val] == 'IL'){
+      bin_value[val] <- 1
+  }
+  else if (dat$State[val] == 'FL'){
+      bin_value[val] <- 1
+  }
+  
+  else if (dat$State[val] == 'NY'){
+      bin_value[val] <- 1
+  }
+  else{
+      bin_value[val] <- 0
+  }
+}
+dat$new_col <- bin_value
+head(dat)
+
+```
+
+### 3
+```{r cars 3}
+
+val <- 'B-'
+if(val == 'A'){
+  print('93%–100%')
+}else if(val == 'A-'){
+    print('90%–92%')
+}else if(val == 'B+'){
+    print('87%–89%')
+}else if(val == 'B'){
+    print('83%–86%')
+}else if(val == 'B-'){
+    print('80%–82%')
+}else if(val == 'C+'){
+    print('77%–79%')
+}else if(val == 'C'){
+    print('73%–76%')
+}else if(val == 'C-'){
+    print('70%–72%')
+}else if(val == 'D'){
+    print('60%–69%')
+}else{
+    print('0% - 59%')
+}
+
+```
+
+### 4
+Import the CommercialProperty dataset and Attach the CommercialProperty dataset (35 points)
+```{r cars 4}
+CP <- "~/Desktop/MSc Analytics/Autumn 2020/MSCA 37010 2 - Programming for Analytics/Week 4/Assignment/"
+CP <- read.csv(paste(dataPath,'CommercialProperty.csv',sep = '/'), header=TRUE)
+names(CP)
+```
+
+###### 4.1) Use a function to signal an error if the CommercialProperty dataset contains NA
+```{r cars 4.1}
+if(any(is.na(CP)) == TRUE){
+  print('Error')
+}
+
+```
+
+###### 4.2) Use a function to remove missing data from the CommercialProperty dataset 
+```{r cars 4.2}
+cleanCP <- na.omit(CP)
+head(cleanCP)
+```
+
+###### 4.3) Use a function to return a logical vector indicating which rows have no missing data
+```{r cars 4.3}
+head(complete.cases(CP))
+is.vector(complete.cases(CP))
+typeof(complete.cases(CP))
+```
+
+###### 4.4) Sort the columns by PolicyNumber and EarnedPremium in ascending order
+```{r cars 4.4}
+head(CP %>% arrange(PolicyNumber,EarnedPremium))
+
+```
+
+###### 4.5) Use a ifelse() function to create an indicator for each of CA, IL, FL, NY
+```{r cars 4.5}
+  if(dat$State[1] == 'CA'){
+    print('California')
+  }else if (dat$State[1] == 'IL'){
+      print('Illinois')
+  }else if (dat$State[1] == 'FL'){
+      print('FLorida')
+  }else if (dat$State[1] == 'NY'){
+      print('New York')
+  }else{
+      print('Other')
+  }
+
+```
+
+###### 4.6) Create a variable LossRatio (= IncurredLoss/EarnedPremium) 
+```{r cars 4.6}
+
+```
+
+###### 4.7) Create an indicator (= 1 if Loss Ratio >=60% & IncurredLoss >=25,000, else 0)
+```{r cars 4.7}
+# - --- dat = dat %>% mutate(candy.flag = factor(ifelse(var == "Candy", "Candy", "Non-Candy")))
+
+```
+
+# 5
+Use For Loop to calculate squared values for 1 to 25.(5 points)
+```{r cars 5}
+for(val in 1:25){
+  print(val * val)
+}
+
+```
+
+# 6
+Use the Workouts vector to create a for loop to list all the weekdays (5 points)
+Workouts <- c("Biking","Hiking","Yoga","Walking","Jogging")
+
+######  Hint: Some possible output looking like below:
+
+######  [1] "Biking"  "on"  "Monday"
+######  [1] "Hiking"  "on"  "Tuesday"
+######  [1] "Yoga"    "on"  "Wednesday"
+######  [1] "Walking" "on"  "Thursday"
+######  [1] "Jogging" "on"  "Friday"
+```{r cars 6}
+Workouts <- c("Biking","Hiking","Yoga","Walking","Jogging")
+WeekDays <- c("Monday","Tuesday","Wednesday", "Thursday", "Friday")
+
+for(val in 1: length(Workouts)){
+  cat(Workouts[val],' on ',WeekDays[val],'\n')
+}
+
+```
+
+# 7
+Subset/Create a for loop to convert fahrenheit to Celeius in the vector: (5 point)
+###### Hint: use length() function to count the temperature position in fahrenheit vector
+```{r cars 7}
+fahrenheit <- c(60, 65, 70, 75, 80, 85, 90, 95, 100) 
+for(val in 1: length(fahrenheit)){
+  c = (fahrenheit[val]-32) * 5/9
+  cat(fahrenheit[val],'F', ' is equal to ', c, '\n')
+}
+
+```
+# 8
+Use a for loop to count the number of even numbers in a vector. (5 points)
+
+```{r cars 8}
+x <- c(2,5,3,9,8,11,6)
+i <- 0
+for(val in 1: length(x)){
+  if(x[val] %% 2 == 0){
+    i = i + 1
+  }
+}
+print(i)
+```
+# 9
+Please create a for loop to merge the 5 Dataframes (add columns): (10 bonus points)
+```{r cars 9}
+Data1<-data.frame("State"=c("CA","NY","IL"),"Value1"=c(900,1000,1200))
+Data2<-data.frame("State"=c("CA","NY","IL"),"Value2"=c(300,800,700)) 
+Data3<-data.frame("State"=c("CA","NY","IL"),"Value3"=c(200,500,1300))
+Data4<-data.frame("State"=c("CA","NY","IL"),"Value4"=c(400,1100,600))
+Data5<-data.frame("State"=c("CA","NY","IL"),"Value5"=c(100,1600,300)) 
+
+my_list <- list(Data1, Data2, Data3, Data4, Data5)
+
+for(val in 1:length(my_list)){
+  i = val + 1
+  Data1[,i] <- my_list[[val]][2]
+}
+
+Data1
+
+```

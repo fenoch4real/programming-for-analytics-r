@@ -1,0 +1,38 @@
+---
+title: "R Markdown Section Text"
+author: "Mei Najim"
+date: "October 14, 2020"
+output: html_document
+---
+Markdown: Text that describes your workflow written using markdown syntax
+
+# Level 1 heading
+## Level 2 heading
+### Level 3 heading
+#### Level 4 heading
+
+
+* This is the first bullet point
+   + this is a sub-bullet
+   + this is a sub-bullet
+* This is the second bullet point
+   + this is a sub-bullet
+      - this is the third layer of bullet point
+      - this is the third layer of bullet point
+* This is the third bullet point
+
+*Italic text*
+
+**bold text**
+
+Text^superscript^
+
+Text~subscript~
+
+
+```{r}
+
+data(iris)
+summary(iris)
+```
+

@@ -1,0 +1,279 @@
+---
+title: "Assignment Week 3"
+author: "Oluwafemi Fabiyi"
+date: "10/23/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### 1
+
+Please submit your R script with output for the following questions.(10 points)
+1) Given the following two vectors:
+x <- 1:15; y <- 5:25
+
+1.1) What elements of x are in y?
+```{r 1.1}
+x <- 1:15
+y <- 5:25
+
+x
+y
+```
+
+1.2) What is the output of x%%3?
+```{r 1.2}
+x %% 3
+
+```
+
+1.3) Use a function to see is there any x greater than 5?
+
+```{r 1.3}
+any(x > 5)
+
+```
+1.4) Use a function to see if all the elements of x are greater than 5?
+
+```{r 1.4}
+all(x>5)
+
+```
+### 2
+
+Given x <- c(10,12,7,2,0,1, NaN, NA), what is the mean(x) after NA is removed? (5 points)
+
+```{r 2}
+x <- c(10,12,7,2,0,1, NaN, NA)
+mean(x, na.rm = TRUE)
+
+```
+### 3
+
+Use a data frame t as the following: (15 points)
+set.seed(12345)
+t <- data.frame(unit = LETTERS[1:3],  a = rnorm(3),  b = rnorm(3))
+class(t)
+```{r 3}
+set.seed(12345)
+t <- data.frame(unit = LETTERS[1:3],  a = rnorm(3),  b = rnorm(3))
+class(t)
+```
+3.1) Create two new columns: sort_a and sort_b by using sort() function of a and b columns.
+```{r 3.1}
+sort(t$a)
+
+sort(t$b)
+
+```
+
+3.2) Create two new columns: order_a and order_b by using order() function of a and b columns.
+```{r 3.2}
+order(t$a)
+
+order(t$b)
+```
+
+3.3) Create two new columns: rank_a and rank_b by using rank() function of a and b columns.
+
+```{r 3.3}
+rank(t$a)
+
+rank(t$b)
+
+```
+
+### 4
+
+Use AutoClaims dataset: (36 points)
+
+4.1) Use read_csv to import AutoClaims data into R
+```{r 4.1}
+dataPath <- "~/Desktop/MSc Analytics/Autumn 2020/MSCA 37010 2 - Programming for Analytics/Week 3/Assignment/"
+dat <- read.csv(paste(dataPath,'AutoClaims.csv',sep = '/'), header=TRUE)
+nrow(dat)
+head(dat)
+
+```
+4.2) Check and remove duplicates
+
+```{r 4.2}
+no_dup_dat <- unique(dat)
+nrow(no_dup_dat)
+head(no_dup_dat)
+
+```
+4.3) Sort by Column “Paid”, ascending
+
+```{r 4.3}
+library(dplyr)
+head(arrange(no_dup_dat,no_dup_dat$PAID))
+
+```
+4.4) Sort by Age, descending
+
+```{r 4.4}
+head(arrange(no_dup_dat, desc(no_dup_dat$AGE)))
+
+```
+4.5) Export the sorted data to a csv file
+
+```{r 4.5}
+write.csv(arrange(no_dup_dat, desc(no_dup_dat$AGE)),file=paste(dataPath,'myAutoClaims.csv',sep = '/'))
+
+```
+4.6) Subsetting Age>= 90 and Gender = "F"
+
+```{r 4.6}
+head(subset(no_dup_dat, AGE >=90 & GENDER == 'F'))
+
+```
+4.7) Subsetting Age>= 90 or Gender = "F"
+
+```{r 4.7}
+head(subset(no_dup_dat, AGE >= 90 | GENDER == 'F'))
+
+```
+4.8) Subsetting PAID >=2000 without Class column
+
+```{r 4.8}
+head(subset(select(no_dup_dat,STATE, GENDER, AGE, PAID), PAID >= 2000))
+
+```
+4.9) Calculate Average Age by Gender = F and M 
+
+```{r 4.9}
+aggregate(x = no_dup_dat$AGE, by = list(no_dup_dat$GENDER),FUN = mean) #Using 'aggregate' function
+
+no_dup_dat %>% group_by(GENDER) %>%  summarise(mean(AGE)) #Using 'dplr' function
+
+```
+4.10) Calculate Average PAID by Gender = F and M 
+
+```{r 4.10}
+aggregate(x = no_dup_dat$PAID, by = list(no_dup_dat$GENDER),FUN = mean) #Using 'aggregate function'
+
+no_dup_dat %>% group_by(GENDER) %>%  summarise(mean(PAID)) #Using 'dplr' function
+
+```
+4.11) Calculate Average PAID by STATE 
+
+```{r 4.11}
+aggregate(x = no_dup_dat$PAID, by = list(no_dup_dat$STATE),FUN = mean) #Using 'aggregate' function
+
+no_dup_dat %>% group_by(STATE) %>%  summarise(mean(PAID)) #Using 'dplr' function
+
+```
+4.12) Calculate Average PAID by CLASS 
+
+```{r 4.12}
+aggregate(x = no_dup_dat$PAID, by = list(no_dup_dat$CLASS),FUN = mean) #Using 'aggregate' function
+
+no_dup_dat %>% group_by(CLASS) %>% summarise(mean(PAID)) #Using 'dplr' function
+
+```
+
+### 5
+
+Merge two datasets by an ID variable, where ID is not the same for both datasets (10 points)
+data1 <- data.frame(ID= letters[1:5], x=1:5)
+data2 <- data.frame(ID= letters[6:10], y=4:8)
+
+5.1) Keep all the ID from either data1 or data2
+```{r 5.1}
+data1 <- data.frame(ID= letters[1:5], x=1:5)
+data2 <- data.frame(ID= letters[6:10], y=4:8)
+
+merge(data1,data2,all=TRUE)
+
+```
+
+5.2) Keep the ID which are in both datasets
+```{r 5.2}
+merge(data1,data2)
+
+```
+
+5.3) Only keep the rows from the 1st argument data1
+```{r 5.3}
+merge(data1,data2,all.x = TRUE)
+```
+5.4) Only keep the rows from the 2nd argument data2
+```{r 5.4}
+merge(data1,data2,all.y = TRUE)
+```
+
+### 6
+
+Merge two datasets to add columns, where the ID variable has a different name (5 points)
+data1 <- data.frame(ID1=1:5, x=letters[1:5])
+data2 <- data.frame(ID2=1:5, x=letters[6:10])
+
+```{r 6}
+data1 <- data.frame(ID1=1:5, x=letters[1:5])
+data1
+data2 <- data.frame(ID2=1:5, x=letters[6:10])
+data2
+
+merge(data1, data2,  by.x = "ID1", by.y = "ID2")
+
+```
+
+### 7) Merge two datasets to add rows, where the ID variable has a different name (10 points)
+data1 <- data.frame(ID1=1:5, x=letters[1:5]);data1
+data2 <- data.frame(ID2=1:5, x=letters[6:10]);data2
+# Hint: you can rename one of the ID variable so that both ID variables have a same name
+```{r 7}
+data1 <- data.frame(ID1=1:5, x=letters[1:5]);
+data1
+data2 <- data.frame(ID2=1:5, x=letters[6:10]);
+data2
+
+merge(data1, data2,   all=T)
+```
+### 8
+Use as.Date to convert the following date format to “yyyy-mm-dd” (10 points)
+8.1)	dates.1 <- c("5jan2008", "19aug2008")
+
+```{r 8.1}
+dates.1 <- c("5jan2008", "19aug2008")
+as.Date(dates.1, format="%d%b%Y")
+
+```
+8.2)	dates.2 <- c("5-1-2008", "19-8-2008")
+```{r 8.2}
+dates.2 <- c("5-1-2008", "19-8-2008")
+as.Date(dates.2, format="%d-%m-%Y")
+
+```
+
+### 9
+(10 points)
+
+9.1) Use as.Date to add 14 days to 2011/1/1 
+```{r 9.1}
+jan1 <- as.Date("2011/1/1")
+(jan8 <- jan1 + 14)
+```
+9.2) Use as.Date to Subtract 1 week from 2011/2/8
+```{r 9.2}
+feb <- as.Date("2011/2/8")
+(jan8 <- feb - 7)
+```
+9.3) Compare dates: jan15 > jan1 
+```{r 9.3}
+jan1 <- as.Date("2011/1/1")
+jan15 <- as.Date("2011/1/15")
+jan15 > jan1
+```
+9.4) Use format.Date to extract Year of 2011/1/1
+```{r 9.4}
+format.Date(jan1, "%Y")
+```
+9.5) Use format.Date to extract moth and day of 2011/1/1
+```{r 9.5}
+format.Date(jan1, "%b-%d")
+```
